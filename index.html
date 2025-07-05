@@ -1,17 +1,222 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>My Telegram Mini App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-</head>
-<body>
-  <h1>Hello from Telegram Mini App!</h1>
-  <p id="telegram-user"></p>
-  <script>
-    const tg = window.Telegram.WebApp;
-    document.getElementById("telegram-user").innerText =
-      "User: " + tg.initDataUnsafe.user?.username;
-  </script>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>RaumFahrt Fantastico</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(145deg, #f0f0f0, #ffffff);
+        font-family: "Inter", sans-serif;
+        color: #1c1c1e;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      .navbar-custom {
+        backdrop-filter: blur(12px);
+        background-color: rgba(255, 255, 255, 0.6);
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        transition: background-color 0.5s ease;
+      }
+      .navbar-custom .nav-link {
+        color: #1c1c1e;
+        margin-right: 20px;
+        transition: color 0.3s ease;
+      }
+      .navbar-custom .nav-link:hover {
+        color: #0d6efd;
+      }
+      .hero {
+        text-align: center;
+        padding: 80px 20px;
+        background: rgba(255,255,255,0.6);
+        backdrop-filter: blur(8px);
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        opacity: 0;
+        animation: fadeIn 1.5s forwards;
+      }
+      .hero h1 {
+        font-weight: 600;
+      }
+      @keyframes fadeIn {
+        to { opacity: 1; }
+      }
+      .table-card {
+        max-width: 1000px;
+        margin: 40px auto;
+        background: rgba(255,255,255,0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        padding: 30px;
+        transform: translateY(50px);
+        opacity: 0;
+        animation: slideUp 1s 0.5s forwards;
+      }
+      @keyframes slideUp {
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .data-table th {
+        background-color: rgba(240,240,240,0.9);
+        font-weight: 500;
+      }
+      .data-table tr:hover {
+        background-color: rgba(240,240,240,0.5);
+        transition: background-color 0.3s ease;
+      }
+      .stats-box {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 12px;
+        background-color: rgba(245,245,245,0.7);
+        backdrop-filter: blur(5px);
+        font-size: 18px;
+      }
+      footer {
+        text-align: center;
+        padding: 20px;
+        color: #6b7280;
+        font-size: 14px;
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#">Zeo Spy Intelligence</a>
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+            <li class="nav-item"><a class="nav-link" href="/tasks">Tasks</a></li>
+            <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero mt-5 pt-4">
+      <h1 class="display-5">Your Data Overview</h1>
+    </section>
+
+    <!-- Data Card -->
+    <div class="table-card">
+      <h3 class="mb-4">Database Records</h3>
+      <table class="table data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+          <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] or '-' }}</td>
+            <td>{{ row[2] or '-' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="stats-box mt-4">
+        <strong>Средний год:</strong> {{ avg_year | round(2) }}
+      </div>
+    </div>
+    <div class="table-card">
+      <h3 class="mb-4">Statistics</h3>
+      <div class="stats-box mt-4">
+        {%if message%}
+        {{message}}
+        {%endif%}
+      </div>
+    </div>
+
+    <!-- добавляем график -->
+    <div class="table-card mt-4">
+        <h4>Количество записей по годам</h4>
+        <canvas id="yearChart" height="100"></canvas>
+    </div>
+
+    <footer>&copy; 2025 RaumFahrt Fantastico</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('yearChart').getContext('2d');
+        const yearChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ year_labels | tojson }},
+      datasets: [{
+        label: 'Количество записей по годам',
+        data: {{ year_values | tojson }},
+        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+        borderColor: 'rgba(0, 0, 0, 0.7)',
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          titleColor: '#fff',
+          bodyColor: '#fff'
+        }
+      },
+      animation: {
+        duration: 1200,
+        easing: 'easeOutCubic'
+      },
+      scales: {
+        x: {
+          grid: {
+            color: 'rgba(0,0,0,0.1)'
+          },
+          ticks: {
+            color: '#111',
+            font: { size: 14 }
+          }
+        },
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: 'rgba(0,0,0,0.05)'
+          },
+          ticks: {
+            precision: 0,
+            color: '#111',
+            font: { size: 14 }
+          }
+        }
+      }
+    }
+});
+      </script>      
+  </body>
 </html>
