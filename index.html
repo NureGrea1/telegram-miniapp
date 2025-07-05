@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My Telegram Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <h1>Hello from Telegram Mini App!</h1>
+  <p id="telegram-user"></p>
+  <script>
+    const tg = window.Telegram.WebApp;
+    document.getElementById("telegram-user").innerText =
+      "User: " + tg.initDataUnsafe.user?.username;
+  </script>
+</body>
+</html>
