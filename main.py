@@ -11,7 +11,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+#test
 @app.post("/auth")
 async def auth_user(request: Request):
     data = await request.json()
