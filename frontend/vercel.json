@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/check",
+        "destination": "https://telegram-miniapp-p42h.onrender.com/check"
+      }
+    ]
+  }
+  
