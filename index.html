@@ -7,22 +7,51 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <h1>Твой Telegram ID:</h1>
-  <p id="userid">Загрузка...</p>
+  <h1>Проверка ID...</h1>
+  <p id="result">Загрузка...</p>
 
   <script>
-    const tg = window.Telegram.WebApp;
-    const user = tg.initDataUnsafe.user;
 
-    // Выводим ID пользователя
-    if (user && user.id) {
-      document.getElementById("userid").innerText = user.id;
-    } else {
-      document.getElementById("userid").innerText = "ID не получен";
-    }
+    // Получаем объект Telegram WebApp
+    var tg = window.Telegram.WebApp;
 
-    // (необязательно) можно вывести в консоль
-    console.log("Пользователь:", user);
+    // Получаем объект пользователя
+    var user = tg.initDataUnsafe.user;
+
+    // Формируем объект с ID пользователя
+    var dataToSend = {
+      chat_id: user.id
+    };
+
+    // fetch() — это асинхронная функция, она не сразу даёт результат.
+    // Она возвращает обещание (Promise) — что когда-нибудь результат придёт.
+    // then(...) = "когда придёт ответ, тогда сделай..."
+
+    fetch("https://telegram-miniapp-p42h.onrender.com/check", {
+      method: "POST", // Тип запроса
+      headers: {
+        "Content-Type": "application/json" // Тип данных — JSON
+      },
+      body: JSON.stringify(dataToSend) // Преобразуем объект в JSON-строку
+    })
+
+    // Обрабатываем ответ от сервера (первый then)
+    .then(function(response) {
+      return response.json(); // Читаем тело ответа как JSON
+    })
+
+    // Обрабатываем готовые данные (второй then)
+    .then(function(data) {
+      var resultElement = document.getElementById("result");
+      resultElement.innerText = data.message; // Показываем сообщение от сервера
+    })
+
+    // Обработка ошибки (если сервер не ответил)
+    .catch(function(error) {
+      var resultElement = document.getElementById("result");
+      resultElement.innerText = "Ошибка запроса к серверу";
+      console.error("Ошибка:", error);
+    });
   </script>
 </body>
 </html>
