@@ -7,7 +7,7 @@ app = FastAPI()
 # Разрешаем фронту (с Vercel) обращаться к нашему серверу
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://telegram-miniapp-2pys.vercel.app"],  # Замени на свой домен
+    allow_origins=["*"],  # Замени на свой домен https://telegram-miniapp-2pys.vercel.app
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -15,7 +15,7 @@ app.add_middleware(
 # POST-запрос на /check
 @app.post("/check")
 async def check_chat_id(request: Request):
-    
+
     data = await request.json()
     chat_id = data.get("chat_id")
 
