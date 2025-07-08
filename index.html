@@ -16,7 +16,13 @@
     // Получаем объект Telegram WebApp
     var tg = window.Telegram.WebApp;
     // Получаем объект пользователя
-    var user = tg.initDataUnsafe.user;
+    //var user = tg.initDataUnsafe.user;
+
+    // Временно — для теста в обычном браузере
+    var user = {
+      id: 640055320
+    };
+    
 
     // Выводим ID пользователя
     if (user && user.id) {
@@ -49,8 +55,7 @@
 
     // Обрабатываем готовые данные (второй then)
     .then(function(data) {
-      var resultElement = document.getElementById("result");
-      resultElement.innerText = data.message; // Показываем сообщение от сервера
+      document.getElementById("result").innerText = JSON.stringify(data);
     })
 
     // Обработка ошибки (если сервер не ответил)
