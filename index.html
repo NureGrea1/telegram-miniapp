@@ -2,34 +2,27 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Telegram Mini App</title>
+  <title>Mini App</title>
+  <!-- подключение официальной Telegram WebApp-библиотеки -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <h1 id="greeting">Загрузка...</h1>
+  <h1>Твой Telegram ID:</h1>
+  <p id="userid">Загрузка...</p>
 
   <script>
     const tg = window.Telegram.WebApp;
     const user = tg.initDataUnsafe.user;
 
-    fetch("https://telegram-miniapp-p42h.onrender.com/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id: user.id,
-        username: user.username
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("greeting").innerText = data.message;
-    })
-    .catch(err => {
-      document.getElementById("greeting").innerText = "Ошибка запроса к серверу";
-      console.error(err);
-    });
+    // Выводим ID пользователя
+    if (user && user.id) {
+      document.getElementById("userid").innerText = user.id;
+    } else {
+      document.getElementById("userid").innerText = "ID не получен";
+    }
+
+    // (необязательно) можно вывести в консоль
+    console.log("Пользователь:", user);
   </script>
 </body>
 </html>

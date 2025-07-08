@@ -18,7 +18,7 @@ async def auth_user(request: Request):
     chat_id = data["id"]
     chat_username = data.get("username", "без ника")
 
-    async with aiosqlite.connect("spy_notifications") as db:
+    async with aiosqlite.connect("spy.db") as db:
         # Создаем таблицу, если ее нет (можно убрать, если она уже есть)
         await db.execute("""
             CREATE TABLE IF NOT EXISTS spy_notifications (
