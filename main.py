@@ -7,7 +7,7 @@ app = FastAPI()
 # Разрешаем фронту (с Vercel) обращаться к нашему серверу
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://telegram-miniapp-plum.vercel.app"],  # Замени на свой домен
+    allow_origins=["https://telegram-miniapp-2pys.vercel.app"],  # Замени на свой домен
     allow_methods=["*"],
     allow_headers=["*"],
 )
