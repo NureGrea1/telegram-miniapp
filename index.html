@@ -8,15 +8,22 @@
 </head>
 <body>
   <h1>Проверка ID...</h1>
+  <p id="tg_id">Telegram ID</p>
   <p id="result">Загрузка...</p>
 
   <script>
 
     // Получаем объект Telegram WebApp
     var tg = window.Telegram.WebApp;
-
     // Получаем объект пользователя
     var user = tg.initDataUnsafe.user;
+
+    // Выводим ID пользователя
+    if (user && user.id) {
+      document.getElementById("userid").innerText = user.id;
+    } else {
+      document.getElementById("userid").innerText = "ID не получен";
+    }
 
     // Формируем объект с ID пользователя
     var dataToSend = {
